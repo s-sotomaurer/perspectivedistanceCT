@@ -14,6 +14,4 @@ if __name__ == "__main__":
     root.title("Perspective Distance Estimation") # window title
     data_manager = DataManager() # creating DataManager instance
     canvas_manager = CanvasManager(root) # and CanvasManager with the root as an argument
-    #canvas_manager.import_image("/home/ssotoma/Documentos/Universidad/Master/Abschlussarbeit/Data/test2.jpg")
-    # create_ui(root, data_manager, canvas_manager) # now we can start the UI
     my_userinterface = UserInterface(root, data_manager, canvas_manager)
