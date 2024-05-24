@@ -4,7 +4,7 @@ from tkinter import messagebox as mb
 from pathlib import Path
 from PIL import Image, ImageTk, ImageOps, ImageDraw, ImageFont
 import math
-
+import sys
 
 from perspectivetriangles_functions import PerspectiveTriangle
 from gridmanager import GridManager
@@ -108,6 +108,8 @@ class CanvasManager:
             self.img_width = int(self.img_width * aspect_ratio)
             self.img_height = int(self.img_height * aspect_ratio)
             image = image.resize((self.img_width, self.img_height), Image.LANCZOS)
+        else:
+            self.aspect_ratio = 1
 
         # Set the geometry of the window and canvas
         window_geometry = f"{self.img_width + motherframe_width}x{self.img_height}"
@@ -392,7 +394,8 @@ class CanvasManager:
         This function is called when the "save images" button is clicked in the user interface.
         It first validates the user input. If the input is not valid, the function returns.
         Then, it creates an empty image and a drawing object. It prepares the directory to save the images and creates a progress bar window.
-        Next, it draws lines on the empty image and overlays and saves the images to the prepared directory. It also displays a message box indicating that the process is done.
+        Next, it draws lines on the empty image and overlays and saves the images to the prepared directory.
+        It also displays a message box indicating that the process is done.
         '''
         if not self.validate_image_save():
             return
@@ -411,16 +414,31 @@ class CanvasManager:
         # prepare progress bar
         progress_window, progress, progress_label = self.create_progressbar_window()
         
+        FONTSIZEONIMAGE = 30
+        if self.img_height < 1000:
+            FONTSIZEONIMAGE = 14
 
-        # draw metadata on image
-        font = ImageFont.truetype(r"./Actor.ttf", 40, encoding="unic")
+        # draw line distances on image
+        if 'linux' in sys.platform:
+            font = ImageFont.truetype(r"./Actor.ttf", FONTSIZEONIMAGE, encoding="unic")
+        elif 'win32' in sys.platform:
+            font = ImageFont.truetype(r"arial.ttf", FONTSIZEONIMAGE, encoding="unic")
+        elif 'darwin' in sys.platform:
+            font = ImageFont.truetype(r"arial.ttf", FONTSIZEONIMAGE, encoding="unic")
         
         # draw lines on the draw from empty image and the distances to each line
         self.draw_lines(draw, fill)
         self.draw_distances(draw, data_manager, fill, font)
 
-        # draw input data for distance estimation
-        font = ImageFont.truetype(r"./Actor.ttf", 30, encoding="unic")
+        # draw user input data
+        # get the available font
+        if 'linux' in sys.platform:
+            font = ImageFont.truetype(r"./Actor.ttf", FONTSIZEONIMAGE, encoding="unic")
+        elif 'win32' in sys.platform:
+            font = ImageFont.truetype(r"arial.ttf", FONTSIZEONIMAGE, encoding="unic")
+        elif 'darwin' in sys.platform:
+            font = ImageFont.truetype(r"arial.ttf", FONTSIZEONIMAGE, encoding="unic")
+
         self.draw_inputdata(draw, data_manager, fill, font)
 
         # overlay and save images
@@ -561,7 +579,13 @@ class CanvasManager:
         #     10 + (text_height * 8) 
         # ]
         
-        bbox = draw.multiline_textbbox((10,10),
+        bbox_starty = self.img_height - 250
+        
+        if self.img_height < 1000:
+            bbox_starty = self.img_height - 150
+
+        # draw the multiline textbox
+        bbox = draw.multiline_textbbox((10, bbox_starty),
             f"Size of poles: {real_pole_size} m\n"
             f"Distance between camera and first line: {distance_input} m\n"
             f"Distance between camera and second line: {distance_to_pole2} m\n"
@@ -573,7 +597,7 @@ class CanvasManager:
 
         # Draw the rectangle background
         # draw.rectangle(rectangle_coordinates, fill="lightcyan", outline=fill)
-        draw.rectangle(bbox, fill="lightcyan", outline=fill)
+        # draw.rectangle(bbox, fill="lightcyan", outline=fill)
 
         # distance between z-lines
         z_distance = (distance_input - distance_to_pole2) / desired_distance * real_pole_size

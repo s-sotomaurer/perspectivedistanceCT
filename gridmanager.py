@@ -55,9 +55,9 @@ class GridManager:
         
         # import values from user input
         real_pole_size = data_manager.get_data("real_pole_size") # - take real length of poles W
-        print(f"real pole size is {real_pole_size}")
+        # print(f"real pole size is {real_pole_size}")
         distance_to_pole2 = data_manager.get_data("distance_to_pole2") # - take real distance to second pole D
-        print(f"distance to pole 2 is {distance_to_pole2}")
+        # print(f"distance to pole 2 is {distance_to_pole2}")
         desired_distance_input = data_manager.get_data("desired_distance_input") # get desired distance D' between each new pole
         camera_height = data_manager.get_data("camera_height") # get camera height
 
