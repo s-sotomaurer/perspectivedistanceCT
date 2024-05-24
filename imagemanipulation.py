@@ -413,14 +413,14 @@ class CanvasManager:
         
 
         # draw metadata on image
-        font = ImageFont.truetype(r".venv/lib/python3.11/site-packages/fonts/Actor.ttf", 40, encoding="unic")
+        font = ImageFont.truetype(r"./Actor.ttf", 40, encoding="unic")
         
         # draw lines on the draw from empty image and the distances to each line
         self.draw_lines(draw, fill)
         self.draw_distances(draw, data_manager, fill, font)
 
         # draw input data for distance estimation
-        font = ImageFont.truetype(r".venv/lib/python3.11/site-packages/fonts/Actor.ttf", 30, encoding="unic")
+        font = ImageFont.truetype(r"./Actor.ttf", 30, encoding="unic")
         self.draw_inputdata(draw, data_manager, fill, font)
 
         # overlay and save images
